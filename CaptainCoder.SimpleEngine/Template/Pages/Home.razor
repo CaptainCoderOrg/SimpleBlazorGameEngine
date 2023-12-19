@@ -1,0 +1,24 @@
+﻿@inject Microsoft.JSInterop.IJSRuntime js;
+@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<div id="content" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;">
+    <canvas id="main-canvas" @ref="canvas"></canvas>
+</div>
+
+@code {
+    private ElementReference canvas;
+    protected override async Task OnAfterRenderAsync(bool first_render)
+    {
+        if (first_render)
+        {
+            await js.InvokeVoidAsync("resizeCanvas", new object[0]);
+            await using (var context = await js.GetContext2DAsync(canvas))
+            {
+                await context.FontAsync("48px serif");
+                await context.StrokeTextAsync("Excubo.Blazor.Canvas", 0, 150);
+            }
+        }
+    }
+}
